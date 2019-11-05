@@ -285,7 +285,15 @@ const keysArray = [
 ];
 
 let capsLockState = true;
-let lang = false;
+
+
+function isLanguage() {
+  if (localStorage.getItem('lang') === 'true') {
+    return true;
+  }
+  return false;
+}
+let lang = isLanguage() || false;
 
 function keysToUp() {
   keysArray.forEach((item) => {
@@ -380,19 +388,14 @@ document.addEventListener('keydown', (event) => {
     keysArray.forEach((item) => {
       const key = document.getElementById(item.keyCode);
 
-      if (lang) {
+      if (isLanguage()) {
         key.textContent = item.valueRu || item.value;
       } else {
         key.textContent = item.valueEng || item.value;
       }
     });
 
-    lang = !lang;
-
-
-    setTimeout(() => {
-      document.getElementById('AltLeft').classList.remove('active');
-    }, 500);
+    localStorage.setItem('lang', lang = !lang);
   }
 });
 
@@ -434,11 +437,10 @@ window.addEventListener('load', () => {
       document.getElementById(item.keyCode).classList.remove('active');
     });
 
-
-    if (lang) {
-      key.textContent = item.valueEng || item.value;
-    } else {
+    if (isLanguage()) {
       key.textContent = item.valueRu || item.value;
+    } else {
+      key.textContent = item.valueEng || item.value;
     }
 
     keyboard.appendChild(key);
